@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-cleanup-job
+  namespace: {{ .Release.Namespace }}
+  labels:
+    product: {{ .Chart.Name }}
+    app: mongodb-utils
+    releaseName: {{ .Release.Name }}
+  labels:
+  annotations:
+    "helm.sh/hook": post-delete # << run before delete (we still need the role)
+spec:
+  template:
+    spec:
+      serviceAccountName: {{ .Values.operator.name }}
+      automountServiceAccountToken: true 
+    containers:
+    - name: post-delete
+      image: "appropriate/curl" # alpine + curl (3 MB)
+      env:
+        - name: RELEASE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels.releaseName
+        - name: SECRET 
+          value: "ops-manager-gen-key"
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      command: 
+        - "/bin/sh"
+        - "-ec"
+        - |
+          curl -s -X DELETE -k https://kubernetes.default.svc/api/v1/namespaces/${NAMESPACE}/secrets/${RELEASE}-${SECRET} \
+            -H "Authorization: Bearer $( cat /var/run/secrets/kubernetes.io/serviceaccount/token )" \
+            -H "Content-Type: application/json" \
+            -H "Accept: application/json" \
+            -d "{ \"kind\": \"Secret\", \"apiVersion\": \"v1\", \"metadata\": { \"name\": \"${RELEASE}-${SECRET}\", \"namespace\": \"${NAMESPACE}\" } }"  > /dev/null

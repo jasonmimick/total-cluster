@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>MongoDB Keep</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+  <img href="{{ url_for('static', filename='keep.png') }}">
+  <hr/>
+  <table>
+  <tr>
+    <th>metadata.name</th>
+    <th>status.type</th>
+    <th>status.phase</th>
+    <th>status.link</th>
+  <tr>
+  {% for cluster in clusters %}
+    <tr>
+    <td>{{ cluster['metadata']['name'] }}</td>
+    <td>{{ cluster['status'].get('type') }}</td>
+    <td>{{ cluster['status'].get('phase') }}</td>
+    <td>{{ cluster['status'].get('link') }}</td>
+    </tr>
+  {% endfor %}
+  </tr>
+  </table>
+  </body>
+</html>

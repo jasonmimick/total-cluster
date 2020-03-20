@@ -1,0 +1,93 @@
+---
+apiVersion: mongodb.com/v1
+kind: MongoDBOpsManager
+metadata:
+  name: {{ .Release.Name }}-ops-manager
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: mongodb-ops-manager
+    product: {{ .Chart.Name }}
+spec:
+  replicas: 1 
+  version: 4.2.4
+  adminCredentials: {{ .Release.Name }}-ops-manager-secret
+  podSpec:
+    containers: 
+    - name: {{ .Release.Name }}-ops-manager
+      env:
+      - name: SKIP_OPS_MANAGER_REGISTRATION
+        value: "true"
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/role 
+              operator: In
+              values:
+              - mongodb-ops-manager 
+
+  # optional, enabled by default
+  # Allows to configure backup in Ops Manager
+  backup:
+    enabled: true
+    opLogStores:
+    - name: oplog1
+      mongodbResourceRef:
+        name: {{ .Release.Name }}-ops-manager-backup 
+    s3Stores:
+    - name: S3GatewayStore1
+      mongodbResourceRef:
+        name: {{ .Release.Name }}-ops-manager-backup 
+      pathStyleAccessEnabled: true
+      s3BucketEndpoint: http://s3-gateway-tardigrade-gateway-svc 
+      s3BucketName: test4 
+      s3SecretRef:
+        name: s3-gateway-credentials
+    podSpec:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/role 
+                operator: In
+                values:
+                - mongodb-ops-manager-backup-daemon 
+      podTemplate:
+        spec:
+          # This container will be added to each pod as a sidecar
+          containers:
+            - name: appdb-sidecar
+              image: busybox
+              command: ["sleep"]
+              args: [ "infinity" ]
+              resources:
+                limits:
+                  cpu: "1"
+                requests:
+                  cpu: 500m
+
+  # the Ops Manager configuration. All the values must be of type string
+  configuration:
+    mms.fromEmailAddr: "admin@mongodb.com"
+    mms.replyToEmailAddr: "admin@mongodb.com"
+    mms.adminEmailAddr: "admin@mongodb.com"
+    mms.mail.transport: "smtp"
+    mms.mail.hostname: "localhost"
+    mms.mail.port: "25"
+    mms.ignoreInitialUiSetup: "true"
+
+  applicationDatabase:
+    members: 3
+    version: 4.2.0
+    persistent: true
+    podSpec:
+      cpu: '0.25'
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/role 
+                operator: In
+                values:
+                - mongodb-ops-manager 
+

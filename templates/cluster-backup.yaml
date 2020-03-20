@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-ops-manager-project-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    product: {{ .Chart.Name }}
+data:
+  projectName: {{ .Release.Name }}-backup
+  baseUrl:  http://{{ .Release.Name }}-ops-manager-svc.{{ .Release.Namespace }}.svc.cluster.local:8080
+  credentials: {{ .Release.Name }}-ops-manager-admin-key
+---
+apiVersion: mongodb.com/v1
+kind: MongoDB
+metadata:
+  name: {{ .Release.Name }}-ops-manager-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    product: {{ .Chart.Name }}
+spec:
+  members: 2 
+  type: ReplicaSet
+  version: {{ .Values.mongodb.cluster.version }}
+  clusterDomain: {{ .Values.mongodb.cluster.clusterDomain }}
+  service: {{ .Release.Name }}-ops-manager-backup
+  opsManager:
+    configMapRef:
+      name: {{ .Release.Name }}-ops-manager-project-backup
+  credentials: {{ .Release.Name }}-ops-manager-admin-key
+  logLevel: WARN
+  persistent: true
+  podSpec:
+    cpu: '0.5'
+    memory: 1G
+    persistence:
+      single:
+        storage: 10G   
+        #storageClass: default 

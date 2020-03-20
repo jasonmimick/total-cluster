@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-db-binding
+  namespace: {{ .Release.Namespace }}
+  labels:
+    product: {{ .Chart.Name }}
+stringData:
+  #username: TODO 
+  #password: TODO
+  #uri: 'mongodb://{{ .Release.Name }}-local-db-0-{{ .Release.Name }}-local-db.{{ .Release.Namespace }}.svc.{{ .Values.mongodb.cluster.clusterDomain }},{{ .Release.Name }}-local-db-1-{{ .Release.Name }}-local-db.{{ .Release.Namespace }}.svc.{{ .Values.mongodb.cluster.clusterDomain }},{{ .Release.Name }}-local-db-2-{{ .Release.Name }}-local-db.{{ .Release.Namespace }}.svc.{{ .Values.mongodb.cluster.clusterDomain }}/test?ssl=false'
+  uri: 'mongodb+srv://{{ .Release.Name }}.{{ .Release.Namespace }}.svc.{{ .Values.mongodb.cluster.clusterDomain }}/test?ssl=false'
