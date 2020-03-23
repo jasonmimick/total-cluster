@@ -72,6 +72,19 @@ statefulset.apps/mongodb-ops-manager-backup-daemon   1/1     5h56m
 You can connect to the database with the `uri` found
 in the binding secret.
 
+```bash
+ k describe secret mongodb-db-binding                                           5041  17:42:35  
+Name:         mongodb-db-binding
+Namespace:    default
+Labels:       product=mongodb-k8s
+Annotations:  
+Type:         Opaque
+
+Data
+====
+uri:  62 bytes
+```
+
 ## GCE
 
 Installs an n-node k3s cluster into GCE vms.
