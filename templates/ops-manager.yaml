@@ -12,11 +12,16 @@ spec:
   version: 4.2.4
   adminCredentials: {{ .Release.Name }}-ops-manager-secret
   podSpec:
-    containers: 
-    - name: {{ .Release.Name }}-ops-manager
-      env:
-      - name: SKIP_OPS_MANAGER_REGISTRATION
-        value: "true"
+    podTemplate:
+      spec:
+        # This container will be added to each pod as a sidecar
+        containers:
+          - name: smtp-sidecar
+            image: bytemark/smtp
+          - name: {{ .Release.Name }}-ops-manager
+            env:
+            - name: SKIP_OPS_MANAGER_REGISTRATION
+              value: "true"
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
@@ -52,19 +57,6 @@ spec:
                 operator: In
                 values:
                 - mongodb-ops-manager-backup-daemon 
-      podTemplate:
-        spec:
-          # This container will be added to each pod as a sidecar
-          containers:
-            - name: appdb-sidecar
-              image: busybox
-              command: ["sleep"]
-              args: [ "infinity" ]
-              resources:
-                limits:
-                  cpu: "1"
-                requests:
-                  cpu: 500m
 
   # the Ops Manager configuration. All the values must be of type string
   configuration:
@@ -72,7 +64,7 @@ spec:
     mms.replyToEmailAddr: "admin@mongodb.com"
     mms.adminEmailAddr: "admin@mongodb.com"
     mms.mail.transport: "smtp"
-    mms.mail.hostname: "localhost"
+    mms.mail.hostname: {{ .Release.Name }}-mail
     mms.mail.port: "25"
     mms.ignoreInitialUiSetup: "true"
 
@@ -81,7 +73,6 @@ spec:
     version: 4.2.0
     persistent: true
     podSpec:
-      cpu: '0.25'
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
