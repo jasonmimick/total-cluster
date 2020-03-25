@@ -169,7 +169,7 @@ down() {
       for ZONE in ${DELETE_ZONES}; do
         echo "Deleting GCP instances with TAG=${TAG} in ZONE=${ZONE}"
         gcloud compute instances list \
-            --filter=tags.items="${TAG}" --format="get(name)" | \
+            --filter="zone:(${ZONE}) AND tags.items=${TAG}" --format="get(name)" | \
                 xargs gcloud compute instances delete \
                   --zone "${ZONE}" -q --delete-disks all 
       done
