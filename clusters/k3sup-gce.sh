@@ -161,18 +161,19 @@ down() {
     MMS_NODES_TAG="${CLUSTER_TAG}-ops-manager"
     (
     set -x
-    gcloud compute instances list \
-        --filter=tags.items="${CLUSTER_TAG}-worker" --format="get(name)" | \
-            xargs gcloud compute instances delete \
-              --zone "${ZONE}" -q --delete-disks all 
-    gcloud compute instances list \
-        --filter=tags.items="${MMS_NODES_TAG}-${ZONE}" --format="get(name)" | \
-            xargs gcloud compute instances delete \
-              --zone "${ZONE}" -q --delete-disks all 
-    gcloud compute instances list \
-        --filter=tags.items="${MMS_NODES_TAG}-${ZONE_DR}" --format="get(name)" | \
-            xargs gcloud compute instances delete \
-              --zone "${ZONE_DR}" -q --delete-disks all 
+   
+    
+    DELETE_TAGS="${CLUSTER_TAG}-worker ${MMS_NODES_TAG}"
+    DELETE_ZONES="${ZONE_A} ${ZONE_B}"
+    for TAG in ${DELETE_TAGS}; do
+      for ZONE in ${DELETE_ZONES}; do
+        echo "Deleting GCP instances with TAG=${TAG} in ZONE=${ZONE}"
+        gcloud compute instances list \
+            --filter=tags.items="${TAG}" --format="get(name)" | \
+                xargs gcloud compute instances delete \
+                  --zone "${ZONE}" -q --delete-disks all 
+      done
+    done
     gcloud compute instances list \
         --filter=tags.items="${CLUSTER_TAG}-master" --format="get(name)" | \
             xargs gcloud compute instances delete \

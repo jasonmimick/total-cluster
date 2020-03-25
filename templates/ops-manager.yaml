@@ -60,9 +60,9 @@ spec:
 
   # the Ops Manager configuration. All the values must be of type string
   configuration:
-    mms.fromEmailAddr: "admin@mongodb.com"
-    mms.replyToEmailAddr: "admin@mongodb.com"
-    mms.adminEmailAddr: "admin@mongodb.com"
+    mms.fromEmailAddr: {{ .Values.mail.relayUsername }}
+    mms.replyToEmailAddr: {{ .Values.mail.relayUsername }}
+    mms.adminEmailAddr: {{ .Values.mail.relayUsername }}
     mms.mail.transport: "smtp"
     mms.mail.hostname: {{ .Release.Name }}-mail
     mms.mail.port: "25"
