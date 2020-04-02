@@ -1,0 +1,88 @@
+#
+# Enterprise MongoDB for Kubernetes.
+#
+
+# Set this to true if your cluster is managing SecurityContext for you.
+# If running OpenShift (Cloud, Minishift, etc.), set this to true.
+managedSecurityContext: false
+
+operator:
+  # Execution environment for the operator, dev or prod. Use dev for more verbose logging
+  env: dev 
+
+  # Name that will be assigned to most of internal Kubernetes objects like Deployment, ServiceAccount, Role etc.
+  name: mongodb-enterprise-operator
+
+  # Version of mongodb-enterprise-operator and mongodb-enterprise-database images
+  version: latest
+
+database:
+  name: mongodb-enterprise-database
+
+
+appDb:
+  name: mongodb-enterprise-appdb
+
+registry:
+  # Specify if images are pulled from private repository
+  imagePullSecrets:
+  pullPolicy: Always
+  repository: quay.io/mongodb
+
+# Set this to true if the operator will require Kubernetes CA
+# infrastructure to generate TLS certificates.
+needsCAInfrastructure: true
+
+
+mail:
+  relayHost: "smtp.gmail.com"
+  relayPort: "587"
+  relayUsername: "jason.mimick@10gen.com"
+  relayPassword: "wuwkibhriamhrxgz"
+   
+
+opsManager:
+  image: mongodb-enterprise-ops-manager
+  enabled: true
+  port: 8080
+  nodeAffinity:
+    nodeRole: mongodb-ops-manager
+  adminCredentials:
+    FirstName: Joe
+    LastName: McMongo
+    Password: MongoDB12345% 
+    Username: admin@mongodb.com
+    publicApiKey: MongoDB12345%
+  backup:
+    enabled: true
+    opLogStores:
+    - name: oplog1
+      mongodbResourceRef:
+        name: ops-manager-backup 
+    s3Stores:
+    - name: S3GatewayStore1
+      mongodbResourceRef:
+        name: ops-manager-backup 
+      pathStyleAccessEnabled: true
+      s3BucketEndpoint: http://s3-gateway-tardigrade-gateway-svc 
+      s3BucketName: test4 
+      s3SecretRef:
+        name: s3-gateway-credentials
+
+mongodb:
+  cluster:
+    members: 3
+    clusterDomain: cluster.local
+    version: 4.2.3-ent
+    nodeRole: mongodb-node
+    #version: 4.2.3
+    podSpec:
+      cpu: '0.5'
+      memory: 1G
+      persistence:
+        single:
+          storage: 10G   
+          #storageClass: default 
+
+# add users:
+

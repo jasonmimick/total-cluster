@@ -1,3 +1,4 @@
+{{- if .Values.mail }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -48,4 +49,4 @@ spec:
         image: bytemark/smtp 
         ports:
         - containerPort: 25
-
+{{- end }}

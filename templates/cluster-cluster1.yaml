@@ -23,19 +23,24 @@ spec:
   version: {{ .Values.mongodb.cluster.version }}
   clusterDomain: {{ .Values.mongodb.cluster.clusterDomain }}
   service: {{ .Release.Name }}
+  {{- if .Values.opsManager }}
   opsManager:
     configMapRef:
       name: {{ .Release.Name }}-ops-manager-project
   credentials: {{ .Release.Name }}-ops-manager-admin-key
+  {{- else }}
+  cloudManager:
+    configMapRef:
+      name: {{ .Release.Name }}-cloud-manager-project
+  credentials: {{ .Release.Name }}-cloud-manager-secret
+  {{- end }}
   logLevel: WARN
   persistent: true
+{{- with .Values.podSpec }}
   podSpec:
-    cpu: '0.5'
-    memory: 1G
-    persistence:
-      single:
-        storage: 10G   
-        #storageClass: default 
+    {{- toYaml . | nindent 4 }}
+{{- end }}
+    {{- if .Values.mongodb.nodeRole }}
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
@@ -44,3 +49,4 @@ spec:
               operator: In
               values:
               - mongodb-node 
+    {{- end }}

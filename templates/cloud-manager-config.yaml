@@ -1,0 +1,24 @@
+{{- if .Values.cloudManager }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-cloud-manager-project
+  namespace: {{ .Release.Namespace }}
+  labels:
+    product: {{ .Chart.Name }}
+data:
+  projectName: {{ .Release.Name }}-dbs
+  baseUrl: https://cloud.mongodb.com
+  orgId: {{ .Values.cloudManager.orgId }} 
+  credentials: {{ .Release.Name }}-cloud-manager-secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-cloud-manager-secret
+  namespace: {{ .Release.Namespace }}
+stringData:
+  user: {{ .Values.cloudManager.publicApiKey }}
+  publicApiKey: {{ .Values.cloudManager.privateApiKey }}
+{{- end }}
+

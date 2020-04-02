@@ -1,5 +1,5 @@
 apiVersion: v2
-name: mongodb-k8s
+name: total-cluster 
 description: |-
   MongoDB.
 

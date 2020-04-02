@@ -1,3 +1,4 @@
+{{- if .Values.opsManager }}
 ---
 apiVersion: mongodb.com/v1
 kind: MongoDBOpsManager
@@ -22,6 +23,7 @@ spec:
             env:
             - name: SKIP_OPS_MANAGER_REGISTRATION
               value: "true"
+{{- if .Values.opsManager.nodeAffinity }}
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
@@ -29,25 +31,15 @@ spec:
             - key: kubernetes.io/role 
               operator: In
               values:
-              - mongodb-ops-manager 
+              - {{ .Values.opsManager.nodeAffinity.nodeRole }}
+{{- end }}
 
-  # optional, enabled by default
-  # Allows to configure backup in Ops Manager
+{{- with .Values.opsManager.backup }}
   backup:
-    enabled: true
-    opLogStores:
-    - name: oplog1
-      mongodbResourceRef:
-        name: {{ .Release.Name }}-ops-manager-backup 
-    s3Stores:
-    - name: S3GatewayStore1
-      mongodbResourceRef:
-        name: {{ .Release.Name }}-ops-manager-backup 
-      pathStyleAccessEnabled: true
-      s3BucketEndpoint: http://s3-gateway-tardigrade-gateway-svc 
-      s3BucketName: test4 
-      s3SecretRef:
-        name: s3-gateway-credentials
+    {{- toYaml . | nindent 4 }}
+{{- end }}
+#{{ .Values.opsManager.nodeAffinity }}
+{{- if .Values.opsManager.nodeAffinity }}
     podSpec:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -56,7 +48,8 @@ spec:
               - key: kubernetes.io/role 
                 operator: In
                 values:
-                - mongodb-ops-manager-backup-daemon 
+                - {{ .Values.opsManager.nodeAffinity.nodeRole }}
+{{- end }}
 
   # the Ops Manager configuration. All the values must be of type string
   configuration:
@@ -72,6 +65,7 @@ spec:
     members: 3
     version: 4.2.0
     persistent: true
+{{- if .Values.opsManager.nodeAffinity }}
     podSpec:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -80,5 +74,7 @@ spec:
               - key: kubernetes.io/role 
                 operator: In
                 values:
-                - mongodb-ops-manager 
+                - {{ .Values.opsManager.nodeAffinity.nodeRole }}
+{{- end }}
+{{- end }}
 

@@ -1,3 +1,5 @@
+{{- if .Values.opsManager }}
+{{- if .Values.opsManager.backup.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -36,3 +38,5 @@ spec:
       single:
         storage: 10G   
         #storageClass: default 
+{{- end }}
+{{- end }}
