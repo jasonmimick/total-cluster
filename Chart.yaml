@@ -2,6 +2,18 @@ apiVersion: v2
 name: total-cluster 
 description: |-
   MongoDB.
+  This chart installs an Enterprise MongoDB Data Platform.
+  The platform allows you to create, consume, and manage MongoDB databases
+  running within Kubernetes.
+  The platform allows you to create, consume, and manage MongoDB Atlas 
+  databases running in the cloud of your choice (AWS, GCP, Azure).
+  The platform generates binding secrets which apps can use to securly
+  and easliy connect with MongoDB's.
+  There are a few varieties of Total Cluster:
+      (1) *extra-lite*
+      (2) *lite*
+      (3) *standard*
+      (4) *advanced*
 
 type: application
 

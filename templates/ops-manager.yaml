@@ -12,6 +12,8 @@ spec:
   replicas: 1 
   version: 4.2.4
   adminCredentials: {{ .Release.Name }}-ops-manager-secret
+  externalConnectivity:
+    type: LoadBalancer
   podSpec:
     podTemplate:
       spec:
@@ -38,6 +40,11 @@ spec:
   backup:
     {{- toYaml . | nindent 4 }}
 {{- end }}
+    opLogStores:
+    - name: oplog1
+      mongodbResourceRef:
+        name: {{ .Release.Name }}-ops-manager-backup 
+
 #{{ .Values.opsManager.nodeAffinity }}
 {{- if .Values.opsManager.nodeAffinity }}
     podSpec:
@@ -48,7 +55,7 @@ spec:
               - key: kubernetes.io/role 
                 operator: In
                 values:
-                - {{ .Values.opsManager.nodeAffinity.nodeRole }}
+                - {{ .Values.opsManager.nodeAffinity.nodeRole }}-backup-daemon
 {{- end }}
 
   # the Ops Manager configuration. All the values must be of type string

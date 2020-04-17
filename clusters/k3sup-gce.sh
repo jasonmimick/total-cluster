@@ -1,7 +1,7 @@
 #!/bin/bash
 
-set -u
-set -x
+#set -u
+#set -x
 echo "Installing MongoDB Enterprise Data Services Cluster"
 echo "Powered by Google Compute Engine"
 echo "mongodb-k3s sandbox demonstration kit"
@@ -29,7 +29,7 @@ up() {
     gcloud compute instances create "${CLUSTER_TAG}-master" \
         --machine-type "${DB_WORKER_INSTANCE_TYPE}" \
         --zone="${ZONE_A}" --tags "${ORG}","${CLUSTER_TAG}","${CLUSTER_TAG}-master"
-    
+
 
     echo "Creating ${NUM_DB_WORKER_NODES_ZONE_A} workers in ${ZONE_A}"
     echo "---------------------------------------------------------"
@@ -161,8 +161,8 @@ down() {
     MMS_NODES_TAG="${CLUSTER_TAG}-ops-manager"
     (
     set -x
-   
-    
+
+
     DELETE_TAGS="${CLUSTER_TAG}-worker ${MMS_NODES_TAG}"
     DELETE_ZONES="${ZONE_A} ${ZONE_B}"
     for TAG in ${DELETE_TAGS}; do
@@ -171,13 +171,13 @@ down() {
         gcloud compute instances list \
             --filter="zone:(${ZONE}) AND tags.items=${TAG}" --format="get(name)" | \
                 xargs gcloud compute instances delete \
-                  --zone "${ZONE}" -q --delete-disks all 
+                  --zone "${ZONE}" -q --delete-disks all
       done
     done
     gcloud compute instances list \
         --filter=tags.items="${CLUSTER_TAG}-master" --format="get(name)" | \
             xargs gcloud compute instances delete \
-              --zone "${ZONE}" -q --delete-disks all 
+              --zone "${ZONE}" -q --delete-disks all
 
     gcloud compute firewall-rules delete "${CLUSTER_TAG}" -q
     )
@@ -194,10 +194,12 @@ list() {
 usage() {
     echo "Bootstrap or tear down a mongodb-k8s cluster running k3s on GCE"
     echo "k3sup-gcp up"
-    echo "   Provisions k3s cluster. Sets CLUSTER_TAG env variable. " 
+    echo "   Provisions k3s cluster. Sets CLUSTER_TAG env variable. "
     echo ""
-    echo "k3sup down <CLUSTER_TAG>"
-    echo "   Tears down cluster, requires CLUSTER_TAG argument."
+    echo "k3sup up <cluster_tag>"
+    echo "   spin up cluster, optional cluster_tag argument."
+    echo "k3sup down <cluster_tag>"
+    echo "   tears down cluster, requires cluster_tag argument."
 }
 
 case "${1:-usage}" in

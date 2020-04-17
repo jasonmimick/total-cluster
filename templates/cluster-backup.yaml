@@ -20,7 +20,7 @@ metadata:
   labels:
     product: {{ .Chart.Name }}
 spec:
-  members: 2 
+  members: 3 
   type: ReplicaSet
   version: {{ .Values.mongodb.cluster.version }}
   clusterDomain: {{ .Values.mongodb.cluster.clusterDomain }}

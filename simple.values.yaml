@@ -45,8 +45,8 @@ opsManager:
   image: mongodb-enterprise-ops-manager
   enabled: true
   port: 8080
-  nodeAffinity:
-    nodeRole: mongodb-ops-manager
+  #nodeAffinity:
+  #  nodeRole: mongodb-ops-manager
   adminCredentials:
     FirstName: Joe
     LastName: McMongo
@@ -70,7 +70,7 @@ mongodb:
     members: 3
     clusterDomain: cluster.local
     version: 4.2.3-ent
-    nodeRole: mongodb-node
+    #nodeRole: mongodb-node
     #version: 4.2.3
     podSpec:
       cpu: '0.5'
