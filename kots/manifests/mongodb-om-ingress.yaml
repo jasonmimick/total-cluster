@@ -1,0 +1,8 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: mongodb-k8s-ops-manager
+spec:
+  backend:
+    serviceName: mongodb-k8s-ops-manager-svc
+    servicePort: 8080

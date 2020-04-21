@@ -1,0 +1,22 @@
+---
+apiVersion: kots.io/v1beta1
+kind: Application
+metadata:
+  name: mongodb-enterprise-demo
+spec:
+  title: Mongo Operator OM Helm
+  icon: https://github.com/mongodb-js/favicon/raw/master/favicon.ico
+  ports:
+    - serviceName: "mongodb-k8s-ops-manager-svc"
+      servicePort: 8080
+      localPort: 8080
+      applicationUrl: "http://mongodb-k8s-ops-manager-svc"
+  statusInformers:
+    - statefulset/mongodb-k8s-ops-manager
+    - statefulset/mongodb-k8s-ops-manager-db
+    - service/mongodb-k8s-ops-manager-svc
+    - service/mongodb-k8s-ops-manager-db-svc
+  additionalImages:
+    - quay.io/mongodb/mongodb-enterprise-database:1.4.2
+    - quay.io/mongodb/mongodb-enterprise-operator:1.4.2
+
