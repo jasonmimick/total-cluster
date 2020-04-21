@@ -1,0 +1,46 @@
+---
+apiVersion: kots.io/v1beta1
+kind: HelmChart
+metadata:
+  name: mongodb-k8s
+spec:
+  # chart identifies a matching chart from a .tgz
+  chart:
+    name: total-cluster
+    chartVersion: 0.2.0
+
+  # values are used in the customer environment, as a pre-render step
+  # these values will be supplied to helm template
+  values: {}
+
+  optionalValues:
+    - when: repl{{ ConfigOptionEquals "ops_manager_deploy_or_existing" "ops_manager_new" }}
+      values:
+        opsManager:
+          image: mongodb-enterprise-ops-manager
+          enabled: true
+          port: repl{{ ConfigOption `om_port`}}
+          adminCredentials:
+            FirstName: "repl{{ ConfigOption `om_firstname`}}"
+            LastName: "repl{{ ConfigOption `om_lastname`}}"
+            Password: "repl{{ ConfigOption `om_password`}}"
+            Username: "repl{{ ConfigOption `om_username`}}"
+            publicApiKey: "repl{{ ConfigOption `om_publicapikey`}}"
+    - when: repl{{ ConfigOptionEquals "setup_smtp_mail" "1" }}
+      values:
+        mail:
+          relayHost: "repl{{ ConfigOption `smtp_mail_host`}}"
+          relayUsername: "repl{{ ConfigOption `smtp_mail_username`}}"
+          relayPassword: "repl{{ ConfigOption `smtp_mail_password`}}"
+          relayPort: "repl{{ ConfigOption `smtp_mail_port`}}"
+    - when: repl{{ ConfigOptionEquals "create_mongo_db" "1" }}
+      values:
+        database:
+          name: "repl{{ ConfigOption `initial_db_name`}}"
+        mongodb:
+          cluster:
+            members: repl{{ ConfigOption `initial_members_count`}}
+            version: "repl{{ ConfigOption `initial_version`}}"
+  # builder values provide a way to render the chart with all images
+  # and manifests. this is used in replicated to create airgap packages
+  builder: {}
