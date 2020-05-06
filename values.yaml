@@ -33,33 +33,52 @@ registry:
 # infrastructure to generate TLS certificates.
 needsCAInfrastructure: true
 
+
 mail:
   relayHost: "smtp.gmail.com"
   relayPort: "587"
-  relayUsername: "example@server.com"
-  relayPassword: "FOOFOOFOO"
+  relayUsername: "jason.mimick@10gen.com"
+  relayPassword: "wuwkibhriamhrxgz"
    
 
 opsManager:
   image: mongodb-enterprise-ops-manager
   enabled: true
   port: 8080
-  
+  nodeAffinity:
+    nodeRole: mongodb-ops-manager
   adminCredentials:
     FirstName: Joe
     LastName: McMongo
-    Password: "MongoDB12345%"
-    Username: "admin@mongodb.com"
-    publicApiKey: "MongoDB12345%"
+    Password: MongoDB12345% 
+    Username: admin@mongodb.com
+    publicApiKey: MongoDB12345%
   backup:
-    enabled: false
+    enabled: true
+    s3Stores:
+    - name: S3GatewayStore1
+      mongodbResourceRef:
+        name: ops-manager-backup 
+      pathStyleAccessEnabled: true
+      s3BucketEndpoint: http://s3-gateway-tardigrade-gateway-svc 
+      s3BucketName: test4 
+      s3SecretRef:
+        name: s3-gateway-credentials
 
 mongodb:
   cluster:
     members: 3
     clusterDomain: cluster.local
     version: 4.2.3-ent
+    nodeRole: mongodb-node
     #version: 4.2.3
+    podSpec:
+      cpu: '0.5'
+      memory: 1G
+      persistence:
+        single:
+          storage: 10G   
+          #storageClass: default 
 
 # add users:
 
