@@ -24,6 +24,7 @@ helm install mongodb .
 kubectl port-forward mongodb-ops-manager-0 8080:8080
 ```
 
+**TODO** add info to create apikey cloud.mongodb.com
 
 You can connect to the database with the `uri` found
 in the binding secret.
@@ -33,27 +34,28 @@ in the binding secret.
 
 There are various levels of 'sophisication' you can choose for your total cluster, each level adds more locally deployed data platform components.
 
-The minimalist setup is "*extra-lite*". 
-This uses (MongoDB Cloud Manager)[http://http://docs.cloudmanager.mongodb.com/] 
-an enterprise db devops tool, and the 
-(MongoDB Kubernetes)[https://docs.mongodb.com/kubernetes-operator/master/] operator.
+The minimalist setup is **_extra-lite_**. 
 
-* extra-lite.values.yaml
+This uses [MongoDB Cloud Manager](http://http://docs.cloudmanager.mongodb.com/) an enterprise db devops tool, and the  [MongoDB Kubernetes](https://docs.mongodb.com/kubernetes-operator/master/) operator.
+
+* [extra-lite.values.yaml](extra-lite.values.yaml)
     - MongoDB Kubernetes Operator
     - MongoDB Cloud Manager connection
     - Local 3-node MongoDB replica set
     
-The "*lite*" setup switches to a minimalist local (MongoDB Ops Manager) deployment. This setup does not support Ops Manager backups out-of-the-box. (But you can always add it yourself, now or later.)
+The **_lite_** setup switches to a minimalist local (MongoDB Ops Manager) deployment. This setup does not support Ops Manager backups out-of-the-box. (But you can always add it yourself, now or later.)
 
-* lite.values.yaml
+* [lite.values.yaml](lite.values.yaml)
     - MongoDB Kubernetes Operator
     - MongoDB Ops Manager
       - 3-node app db
     - Local 3-node MongoDB replica set
 
-The first almost prod-ready option is the "*standard*" package. This adds local Ops Manager backups, HA Ops Manager backing datastores. When properly configured this option can support air-gapped environments.
+The first almost prod-ready option is the **_standard_** package. This adds local Ops Manager backups, HA Ops Manager backing datastores. When properly configured this option can support air-gapped environments.
 
-* standard.values.yaml
+_Note:_ The [values.yaml](values.yaml) file is a copy of [standard.values.yaml](./standard.values.yaml) and therefore is the default option for total-cluster.
+
+* [standard.values.yaml](./standard.values.yaml)
     - MongoDB Kubernetes Operator
     - MongoDB Ops Manager
       - 3-node app db
@@ -62,6 +64,7 @@ The first almost prod-ready option is the "*standard*" package. This adds local 
     - DB pod spec overrides
     - Local Mail server
 
+
 Needed next levels:
 
 Add Atlas Service Broker & Service Catalog.
@@ -69,11 +72,14 @@ Add support for locally defined "plans" to support Enterprise database-as-a-serv
 
 ## GCE
 
-Installs an n-node k3s cluster into GCE vms.
+Installs an n-node k3s cluster into GCE vms (assumes you have the [gcloud](https://cloud.google.com/sdk/gcloud) cli all setup.
 
 ```bash
-./mongodb-k3sup-gcp.sh
+./clusters/mongodb-k3sup-gcp.sh up
 ```
+
+Currently, setup to demonstrate a minimal production-readly HA/DR platform. So, there a multiple dedicated Kubernetes worker nodes deployed across mutiple GCP zones.
+
 
 ## Replicated KOTS
 
