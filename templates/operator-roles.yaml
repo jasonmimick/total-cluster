@@ -106,20 +106,21 @@ subjects:
 - kind: ServiceAccount
   name: {{ .Values.operator.name }}
   namespace: {{ .Release.Namespace }}
-{{- end }}
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: mongodb-enterprise-appdb
-  namespace: {{ .Release.Namespace }}
-  labels:
-    product: {{ .Chart.Name }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: mongodb-enterprise-database-pods
+  namespace: {{ .Release.Namespace }}
+  labels:
+    product: {{ .Chart.Name }}
+{{- end }}
+{{- if .Values.opsManager.enabled }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mongodb-enterprise-appdb
   namespace: {{ .Release.Namespace }}
   labels:
     product: {{ .Chart.Name }}
@@ -154,4 +155,5 @@ subjects:
   - kind: ServiceAccount
     name: mongodb-enterprise-appdb
     namespace: {{ .Release.Namespace }}
+{{- end }}
 

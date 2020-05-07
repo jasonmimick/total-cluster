@@ -1,0 +1,29 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  labels:
+    product: total-cluster
+  name: mongodb-ops-manager-project-restore
+data:
+  baseUrl: http://mongodb-ops-manager-svc.default.svc.cluster.local:8080
+  credentials: mongodb-ops-manager-admin-key
+  projectName: restore
+---
+kind: MongoDB
+apiVersion: mongodb.com/v1
+metadata:
+  labels:
+    product: total-cluster
+  name: restore-db
+spec:
+  clusterDomain: cluster.local
+  credentials: mongodb-ops-manager-admin-key
+  logLevel: WARN
+  members: 3
+  opsManager:
+    configMapRef:
+      name: mongodb-ops-manager-project-restore
+  persistent: true
+  service: restore-db 
+  type: ReplicaSet
+  version: 4.2.3-ent

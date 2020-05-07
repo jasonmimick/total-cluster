@@ -1,3 +1,4 @@
+{{- if .Values.opsManager.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,6 +10,7 @@ data:
   projectName: {{ .Release.Name }}
   baseUrl:  http://{{ .Release.Name }}-ops-manager-svc.{{ .Release.Namespace }}.svc.cluster.local:8080
   credentials: {{ .Release.Name }}-ops-manager-admin-key
+{{- end }}
 ---
 apiVersion: mongodb.com/v1
 kind: MongoDB
@@ -23,7 +25,7 @@ spec:
   version: {{ .Values.mongodb.cluster.version }}
   clusterDomain: {{ .Values.mongodb.cluster.clusterDomain }}
   service: {{ .Release.Name }}
-  {{- if .Values.opsManager }}
+  {{- if .Values.opsManager.enabled }}
   opsManager:
     configMapRef:
       name: {{ .Release.Name }}-ops-manager-project

@@ -34,6 +34,7 @@ registry:
 needsCAInfrastructure: true
 
 mail:
+  enabled: true
   relayHost: "smtp.gmail.com"
   relayPort: "587"
   relayUsername: "example@server.com"

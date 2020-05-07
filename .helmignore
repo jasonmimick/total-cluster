@@ -1,1 +1,9 @@
+.git
+.git*
+*.tgz
+k*
 kots/
+addons                          
+clusters              
+tools
+docs                  

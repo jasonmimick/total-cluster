@@ -38,6 +38,11 @@ cloudManager:
   privateApiKey: "<YOUR PRIVATE APIKEY>"
   #orgId: 
 
+mail: 
+  enabled: false
+
+opsManager: 
+  enabled: false
 
 mongodb:
   cluster:

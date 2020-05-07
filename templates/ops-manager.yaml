@@ -1,4 +1,4 @@
-{{- if .Values.opsManager }}
+{{- if .Values.opsManager.enabled }}
 ---
 apiVersion: mongodb.com/v1
 kind: MongoDBOpsManager
