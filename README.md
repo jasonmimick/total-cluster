@@ -83,4 +83,17 @@ Currently, setup to demonstrate a minimal production-readly HA/DR platform. So, 
 
 ## Replicated KOTS
 
+Replicated [KOTS](https://kots.io) enables you to manage the app lifecycle of MongoDB Enterprise such as installs, upgrades, rollbacks, troubleshooting, snapshots, etc.
 
+* Install kots as a `kubectl` plugin.
+```shell
+curl https://kots.io/install | bash
+```
+You can rerun the above `curl` command to upgrade `kots`.
+
+* Install MongoDB Total Cluster
+```shell
+kubectl kots install mongodb-enterprise
+```
+
+* TODO: Download the license from the repo.
