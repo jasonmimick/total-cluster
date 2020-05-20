@@ -70,6 +70,24 @@ Needed next levels:
 Add Atlas Service Broker & Service Catalog.
 Add support for locally defined "plans" to support Enterprise database-as-a-service requirements.
 
+## GKE
+
+Very simple way to get started. Install the `gcloud` cli and create a Cloud Manager apikey at http://cloud.mongodb.com. Then,
+
+```bash
+git clone https://github.com/jasonmimick/total-cluster
+cd total-cluster
+gcloud container clusters create --zone us-central1-b total-cluster
+gcloud container clusters get-credentials total-cluster
+# installs to 'default' namespace; change that if you want to
+helm install -f extra-lite.values.yaml \
+             --set cloudManager.publicApiKey=<PUBLIC_KEY> \
+             --set cloudManager.privateApiKey=<PRIVATE_KEY> \
+             --set cloudManager.orgId=<CLOUD_MANAGER_ORG_ID> \
+             total-cluster .
+
+```
+
 ## GCE
 
 Installs an n-node k3s cluster into GCE vms (assumes you have the [gcloud](https://cloud.google.com/sdk/gcloud) cli all setup.
