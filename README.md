@@ -39,6 +39,7 @@ The total-cluster project is basically 1 main Helm chart along with sets of [add
 
 The main Helm chart builds the following:
 
+```
 templates
 ├── binding.yaml                               # Secret holding user database connection string
 ├── cloud-manager-config.yaml                  # Cloud Mgr credentials (optional)
@@ -51,6 +52,7 @@ templates
 ├── ops-manager-admin.secret.yaml              # Creds for ops mgr
 ├── ops-manager.yaml                           # Ops mgr crd instance
 └── service-ui.yaml                            # service for experimental ui
+```
 
 The end result of running this chart will be:
 
