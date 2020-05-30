@@ -1,0 +1,94 @@
+---
+# Source: tardigade-gateway/templates/secret.yaml
+kind: Secret
+apiVersion: v1
+metadata:
+  name: s3-gateway-credentials
+  namespace: mongodb
+stringData:
+  accessKey: EXVoQywZhNeW9PLZwFr4fxcqpbm 
+  secretKey: R6AKsyABaNBFkWWhBLEkb2TwJUg
+---
+# Source: tardigade-gateway/templates/config.configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: s3-gateway-config
+  namespace: mongodb 
+data: 
+  config.yaml: |
+    api-key: 13Yqep2A4nZApGgKBN8VHMRM8gRv1AKVoMtLtqxQHLvQRjMU7tR3nhfeqShhk8XyM2kXBrWB5egza3B1vXNQYyh9PSRNHuu8GD7s8Dj
+    satellite-addr: us-central-1.tardigrade.io 
+    scope: 1BzwvcREnhzC7qsXwZFqhKCkX6bqs7uvNpgSciVYwwyTwhY69S6SR7D9G6phyoGtczBQ8uyZCDcZTthXpfiKQz3hBenNhr7qVvf16kS3CsWGAAZMe3gZMEs9rDvMN2D4XUeaW89oKSzdJKqWUMKHpymanNMFzAHK8fCQqimq78uDdzFfYFpN2KPvDY7pnJSSkK7SKhpZ
+    minio.access-key: EXVoQywZhNeW9PLZwFr4fxcqpbm 
+    minio.secret-key: R6AKsyABaNBFkWWhBLEkb2TwJUg
+    server.address: :7777
+---
+# Source: tardigade-gateway/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: s3-gateway-tardigrade-gateway-svc
+  namespace: mongodb 
+spec:
+  type: ClusterIP 
+  selector:
+    app: s3-gateway-tardigrade-gateway
+  ports:
+    - protocol: TCP
+      #port: 80 
+      #targetPort: 7777
+      port: 7777
+---
+# Source: tardigade-gateway/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3-gateway-tardigrade-gateway
+  namespace: mongodb 
+  labels:
+    app: s3-gateway-tardigrade-gateway
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: s3-gateway-tardigrade-gateway
+  template:
+    metadata:
+      labels:
+        app: s3-gateway-tardigrade-gateway
+    spec:
+      volumes:
+      - name: config-props
+        configMap:
+          name: s3-gateway-config
+      - name: config-emptydir
+        emptyDir: {}
+      initContainers:
+      - name: make-config-rw
+        image: ubuntu:18.04
+        command: [ "sh", "-c" ]
+        args: [ "echo 'Copy config' && cp /configmap/config.yaml /config" ]
+        volumeMounts:
+        - name: config-emptydir
+          mountPath:  /config
+        - name: config-props
+          mountPath: /configmap
+      containers:
+      - name: tardigrade-gateway
+        image: storjlabs/gateway:6697f46-v1.0.0-rc.6-go1.13.8
+        volumeMounts:
+        - name: config-emptydir
+          mountPath:  /config
+        - name: config-props
+          mountPath: /configmap
+        env:
+        - name: CONF_PATH 
+          value: "/config"
+        - name: API_KEY
+          value: "13Yqep2A4nZApGgKBN8VHMRM8gRv1AKVoMtLtqxQHLvQRjMU7tR3nhfeqShhk8XyM2kXBrWB5egza3B1vXNQYyh9PSRNHuu8GD7s8Dj"
+        - name: SATELLITE_ADDR
+          value: "us-central-1.tardigrade.io:7777"
+        ports:
+        - containerPort: 7777
+          protocol: TCP

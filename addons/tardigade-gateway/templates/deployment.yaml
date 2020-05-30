@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-tardigrade-gateway
+  namespace: {{ .Release.Namespace }} 
+  labels:
+    app: {{ .Release.Name }}-tardigrade-gateway
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-tardigrade-gateway
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-tardigrade-gateway
+    spec:
+      volumes:
+      - name: config-props
+        configMap:
+          name: {{ .Release.Name }}-config
+      - name: config-emptydir
+        emptyDir: {}
+      initContainers:
+      - name: make-config-rw
+        image: ubuntu:18.04
+        command: [ "sh", "-c" ]
+        args: [ "echo 'Copy config' && cp /configmap/config.yaml /config" ]
+        volumeMounts:
+        - name: config-emptydir
+          mountPath:  /config
+        - name: config-props
+          mountPath: /configmap
+      containers:
+      - name: tardigrade-gateway
+        image: {{ .Values.gatewayImage }}
+        volumeMounts:
+        - name: config-emptydir
+          mountPath:  /config
+        - name: config-props
+          mountPath: /configmap
+        env:
+        - name: CONF_PATH 
+          value: "/config"
+        - name: API_KEY
+          value: "{{ .Values.api_key }}"
+        - name: SATELLITE_ADDR
+          value: "{{ .Values.satellite_addr }}"
+        ports:
+        - containerPort: 7777
+          protocol: TCP
