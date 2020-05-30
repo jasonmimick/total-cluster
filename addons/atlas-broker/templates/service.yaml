@@ -1,0 +1,18 @@
+---
+# Service to expose the service broker inside the cluster.
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-service-broker
+spec:
+  selector:
+    app: {{ .Release.Name }}-service-broker
+  ports:
+    - protocol: TCP
+      port: 4000 
+      targetPort: 4000
+  type: LoadBalancer
+

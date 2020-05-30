@@ -1,0 +1,20 @@
+action: "load"   # Or "run"
+binding:  
+
+parallelism: 1
+
+workloadDefaults: |+ 
+  recordcount=100000
+  operationcount=100000
+  workload=site.ycsb.workloads.CoreWorkload
+
+  readallfields=true
+
+  readproportion=0.5
+  updateproportion=0.5
+  scanproportion=0
+  insertproportion=0
+
+  requestdistribution=zipfian
+
+  table=ycsb

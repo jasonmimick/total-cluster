@@ -1,0 +1,42 @@
+---
+# Deployment to run the service broker.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-service-broker
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-service-broker
+    product: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-service-broker
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-service-broker
+        service: Atlas 
+    spec:
+      containers:
+        - name: service-broker
+          image: {{ .Values.image }}
+          ports:
+            - containerPort: 4000
+          env:
+            - name: BROKER_LOG_LEVEL 
+              value: "DEBUG"
+            - name: BROKER_HOST
+              value: "0.0.0.0"
+            - name: PROVIDERS_WHITELIST_FILE
+              value: /etc/config/providers-whitelist.json
+          volumeMounts:
+            - name: {{ .Release.Name }}-providers-whitelist
+              mountPath: /etc/config/providers-whitelist.json
+              subPath: providers-whitelist.json
+      volumes:
+        - name: {{ .Release.Name }}-providers-whitelist
+          configMap:
+            name: {{ .Release.Name }}-providers-whitelist
+        

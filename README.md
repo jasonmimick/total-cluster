@@ -1,18 +1,18 @@
 # *total-cluster* <img alt="kind" src="./docs/total-cluster-kitchen-sink.png" width="250x" align=right />
 
-A tool for running an enterprise-grade application
-stack powered by MongoDB running in any Kubernetes cluster.
+A tool for running enterprise-grade application
+stacks powered by MongoDB running in any Kubernetes cluster.
 
 total-cluster is designed to improve the quality of life for technology
 professionals, giving them a simple out-of-box cloud-native
-Kubernetes environement running securely with MongoDB Enterprise
-Data Service. Once installed, total cluster is ready to provide
+Kubernetes environment running securely with MongoDB Enterprise
+Data Services. Once installed, total cluster is ready to provide
 data services for your apps.
 
 total-cluster should only be used for development and testing; it's
 ideally suited for demonstration and proof-of-concept tasks.
 
-**NOTE**: total-cluster is still a work in progress.
+**NOTE**: total-cluster is still a work in progress. If you'd like to get involved making total-cluster better, then heck out the [addons](addons/README.md) page!
 
 ## Get started
 
@@ -29,6 +29,37 @@ kubectl port-forward mongodb-ops-manager-0 8080:8080
 You can connect to the database with the `uri` found
 in the binding secret.
 
+## What is total-cluster?
+
+The total-cluster project is basically 1 main Helm chart along with sets of [addons](addons), [quickups](quickups), and [tools](tools). 
+
+* addons - Additional Helm charts to add more functionality to the cluster. For example, minio or the YCSB load test.
+* quickups - Helper scripts to spin up clusters and similar utilities.
+* tools - Various other experimental items.
+
+The main Helm chart builds the following:
+
+templates
+├── binding.yaml                               # Secret holding user database connection string
+├── cloud-manager-config.yaml                  # Cloud Mgr credentials (optional)
+├── cluster-backup.yaml                        # db cluster for Ops Mgr backups
+├── cluster-cluster1.yaml                      # the db for user to use
+├── deployment-mail.yaml                       # simple local smtp for Ops Mgr
+├── deployment-ui.yaml                         # Experimental simple Operator ui
+├── operator-roles.yaml                        # Standard MDB K8S operator roles
+├── operator.yaml                              # MDB operator
+├── ops-manager-admin.secret.yaml              # Creds for ops mgr
+├── ops-manager.yaml                           # Ops mgr crd instance
+└── service-ui.yaml                            # service for experimental ui
+
+The end result of running this chart will be:
+
+1. A 3-node replica set for use by users and apps
+2. The MongoDB k8s operator
+3. MongoDB Ops Mgr or connection to Cloud Manager
+4. A Secret you can use to connect your apps
+
+This means you can starting running your apps with MongoDB in Kubernetes with the push of a button.
 
 ## Setups
 

@@ -1,0 +1,28 @@
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    provider: {{ .Values.atlas.cluster.provider }}
+    tier: {{ .Values.atlas.cluster.tiers }}
+    region: {{ .Values.atlas.cluster.region }}
+    product: {{ .Chart.Name }}
+spec:
+  serviceClassExternalName: mongodb-atlas-{{ .Values.atlas.cluster.provider }}
+  servicePlanExternalName: {{ .Values.atlas.cluster.tier }}
+  externalID: {{ .Release.Name }}
+  parameters:
+    cluster:
+      clusterType: REPLICASET
+      providerSettings:
+        regionName: {{ .Values.atlas.cluster.region }}
+      numShards: 1
+      #replicationSpecs:
+      #- numShards: 1
+      #  regionsConfig:
+      #    {{ .Values.atlas.cluster.region | quote }}:
+      #      analyticsNodes: 0
+      #      electableNodes: 5
+      #      priority: 7
+      #      readOnlyNodes: 0

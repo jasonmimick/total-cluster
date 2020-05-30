@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-ycsb-job
+spec:
+  parallelism: {{ .Values.parallelism }}
+  template:
+    metadata:
+      name: {{ .Release.Name }}-ycsb-job
+      namespace: {{ .Release.Namespace }}
+    spec:
+      restartPolicy: OnFailure
+      volumes:
+      - name: workload-volume
+        configMap:
+          name: {{ .Release.Name }}-workload
+      containers:
+      - name: ycsb-run
+        image: jmimick/ycsb:latest
+        volumeMounts:
+        - name: workload-volume
+          mountPath: /work
+        env:
+        - name: ACTION
+          value: {{ .Values.action }}
+        - name: USERNAME
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Values.binding }}
+              key: username
+              optional: true
+        - name: PASSWORD 
+          valueFrom: 
+            secretKeyRef:
+              name: {{ .Values.binding }}
+              key: password
+              optional: true
+        - name: URI
+          valueFrom: 
+            secretKeyRef:
+              name: {{ .Values.binding }}
+              key: uri

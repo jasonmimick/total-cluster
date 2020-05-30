@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-providers-whitelist
+  namespace: {{ .Release.Namespace }}
+data:
+  providers-whitelist.json: |
+    { 
+      "GCP": [ "M10", "M20" ], 
+      "AZURE": [ "M10", "M20" ], 
+      "AWS": [ "M10", "M20" ] 
+    }

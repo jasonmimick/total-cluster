@@ -1,0 +1,28 @@
+# Default values for ycsb-benchmarker-load.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+binding:
+
+parallelism: 8
+
+workloadDefaults: |+
+  recordcount=11274289
+  operationcount=30000000
+  workload=site.ycsb.workloads.CoreWorkload
+
+  readallfields=true
+
+  readproportion=0
+  updateproportion=0
+  scanproportion=0.95
+  insertproportion=0.05
+
+  requestdistribution=zipfian
+
+  maxscanlength=100
+
+  scanlengthdistribution=uniform
+
+  table=workload-a
+

@@ -1,0 +1,19 @@
+#
+# This default values file contains
+# settings for the following components:
+# 
+# - MongoDB Atlas Open Service Broker
+#
+# - 1 MongoDB Atlas cluster
+#
+
+#image: quay.io/mongodb/mongodb-atlas-service-broker:latest
+image: jmimick/atlas-osb 
+
+atlas:
+  projectId: 5eb5605b9048047417d7faf1
+  publicApiKey: NZAVBBJT 
+  privateApiKey: ea959e65-f94e-4623-b669-2b6698390415 
+
+
+
