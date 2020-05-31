@@ -103,6 +103,14 @@ Needed next levels:
 Add Atlas Service Broker & Service Catalog.
 Add support for locally defined "plans" to support Enterprise database-as-a-service requirements.
 
+Setup a quick & easy local filesystem snapshot store for Ops Manager.
+
+```
+helm install --set accessKey=myaccesskey,secretKey=mysecretkey \
+    stable/minio
+```
+Then add like `http://minio:9000` and `myaccesskey` and `mysecretkey` into the Ops Mgr S3 backup config.
+
 ## GKE
 
 Very simple way to get started. Install the `gcloud` cli and create a Cloud Manager apikey at http://cloud.mongodb.com. Then,

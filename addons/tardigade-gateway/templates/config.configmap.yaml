@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-config
   namespace: {{ .Release.Namespace }} 
+  labels:
+    app: {{ .Release.Name }}-tardigrade-gateway
 data: 
   config.yaml: |
     api-key: {{ .Values.api_key }}

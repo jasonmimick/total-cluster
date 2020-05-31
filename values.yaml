@@ -35,6 +35,7 @@ needsCAInfrastructure: true
 
 
 mail:
+  enabled: true
   relayHost: "smtp.gmail.com"
   relayPort: "587"
   relayUsername: "jason.mimick@10gen.com"
@@ -45,8 +46,8 @@ opsManager:
   image: mongodb-enterprise-ops-manager
   enabled: true
   port: 8080
-  nodeAffinity:
-    nodeRole: mongodb-ops-manager
+  #  nodeAffinity:
+  #  nodeRole: mongodb-ops-manager
   adminCredentials:
     FirstName: Joe
     LastName: McMongo
@@ -55,15 +56,19 @@ opsManager:
     publicApiKey: MongoDB12345%
   backup:
     enabled: true
+    opLogStores:
+    - name: oplog1
+      mongodbResourceRef:
+        name: {{ .Release.Name }}-ops-manager-backup 
     s3Stores:
     - name: S3GatewayStore1
       mongodbResourceRef:
         name: ops-manager-backup 
       pathStyleAccessEnabled: true
-      s3BucketEndpoint: http://s3-gateway-tardigrade-gateway-svc 
-      s3BucketName: test4 
+      s3BucketEndpoint: http://minio:9000 
+      s3BucketName: test 
       s3SecretRef:
-        name: s3-gateway-credentials
+        name: minio
 
 mongodb:
   cluster:

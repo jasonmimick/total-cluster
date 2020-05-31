@@ -40,10 +40,6 @@ spec:
   backup:
     {{- toYaml . | nindent 4 }}
 {{- end }}
-    opLogStores:
-    - name: oplog1
-      mongodbResourceRef:
-        name: {{ .Release.Name }}-ops-manager-backup 
 
 #{{ .Values.opsManager.nodeAffinity }}
 {{- if .Values.opsManager.nodeAffinity }}
