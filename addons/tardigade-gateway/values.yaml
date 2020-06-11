@@ -6,7 +6,7 @@ access: 14zZEdH4uEZwjbd4fKNHZffoWy5AW8jrFkJF9Sxd5PHH9EtjxEGjX99Zf6u4EGAaCacfHnqy
 satellite_addr: us-central-1.tardigrade.io:7777
 accessKey: EXVoQywZhNeW9PLZwFr4fxcqpbm 
 secretKey: R6AKsyABaNBFkWWhBLEkb2TwJUg
-gatewayImage: storjlabs/gateway:6697f46-v1.0.0-rc.6-go1.13.8
+gatewayImage: storjlabs/gateway:latest
 service:
   port: 80
   type: clusterip
