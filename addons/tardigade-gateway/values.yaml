@@ -1,11 +1,11 @@
 # Default values for tardigade-gateway.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-api_key: 13YqdSrFenfohFHxKFbyB9jw4tWyjevjk9TSGpxzBfSBvQZhz5xtnWshTx8CXpW6JQeDjzFxGsDgQLG9mYpso2TBZsoWMzcV9Ek2LSh
-access: 14zZEdH4uEZwjbd4fKNHZffoWy5AW8jrFkJF9Sxd5PHH9EtjxEGjX99Zf6u4EGAaCacfHnqyXjJuvBDgATSziN9i4yr6LszLgJcTK5mz5hjuzviBBap4KinhWYph4gmYEB5Ffq7miCk5Ew3fpWNBZshc4GT1UDwUKJtxaUJbhideaf1HzzKzan568pj7E4N6MHSYovMoLWokTq9QLhkvgqoo3r3gAsaPti6En7T9zydH9UeZGg5wWCwxW9GrSotivZ1fktBivUVB1JLLpS 
+api_key: {{API_KEY}}
+access: {{PASSPHRASE}}
 satellite_addr: us-central-1.tardigrade.io:7777
-accessKey: EXVoQywZhNeW9PLZwFr4fxcqpbm 
-secretKey: R6AKsyABaNBFkWWhBLEkb2TwJUg
+accessKey: {{GATEWAY_ACCESS_KEY}}
+secretKey: {{GATEWAY_SECRET_KEY}}
 gatewayImage: storjlabs/gateway:6697f46-v1.0.0-rc.6-go1.13.8
 service:
   port: 80
