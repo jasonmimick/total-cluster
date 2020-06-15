@@ -6,7 +6,7 @@ access: {{PASSPHRASE}}
 satellite_addr: us-central-1.tardigrade.io:7777
 accessKey: {{GATEWAY_ACCESS_KEY}}
 secretKey: {{GATEWAY_SECRET_KEY}}
-gatewayImage: storjlabs/gateway:6697f46-v1.0.0-rc.6-go1.13.8
+gatewayImage: storjlabs/gateway:latest
 service:
   port: 80
   type: clusterip
