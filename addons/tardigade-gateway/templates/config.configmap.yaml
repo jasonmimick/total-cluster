@@ -13,3 +13,4 @@ data:
     minio.access-key: {{ .Values.accessKey }} 
     minio.secret-key: {{ .Values.secretKey }}
     server.address: :7777
+    client.user-agent: MongoDB
