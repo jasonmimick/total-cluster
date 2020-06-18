@@ -67,7 +67,7 @@ This means you can starting running your apps with MongoDB in Kubernetes with th
 
 There are various levels of 'sophisication' you can choose for your total cluster, each level adds more locally deployed data platform components.
 
-The minimalist setup is **_extra-lite_**. (#extra-lite)
+The minimalist setup is **_extra-lite_**.
 
 This uses [MongoDB Cloud Manager](http://http://docs.cloudmanager.mongodb.com/) an enterprise db devops tool, and the  [MongoDB Kubernetes](https://docs.mongodb.com/kubernetes-operator/master/) operator.
 
